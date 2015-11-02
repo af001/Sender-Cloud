@@ -1,5 +1,5 @@
 /build
-/androidTest
-/debug
-/release
-/test
+/app/androidTest
+/app/debug
+/app/release
+/app/test
