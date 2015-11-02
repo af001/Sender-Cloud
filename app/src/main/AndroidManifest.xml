@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    package="locateme.technology.xor.locateme" >
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission
+        android:protectionLevel="signature"
+        android:name="locateme.technology.xor.locateme.permission.C2D_MESSAGE" />
+    <uses-permission android:name="locateme.technology.xor.locateme.permission.C2D_MESSAGE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <application
+        android:allowBackup="true"
+        android:fullBackupContent="false"
+        android:name=".support.AppGlobal"
+        android:hardwareAccelerated="true"
+        android:supportsRtl = "false"
+        android:icon="@mipmap/launcher_icon"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Bootstrap.Dark"> >
+
+        <activity
+            android:name=".AppController"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="713c97ad73c92e691d5188791591507b1fe02b49" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:value="barcode" />
+
+        <activity
+            android:name=".mains.MapsActivity"
+            android:label="@string/title_activity_maps"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".dialogs.NicknameDialog"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".mains.LoginActivity"
+            android:label="Login"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name="locateme.technology.xor.barcodereader.BarcodeCaptureActivity"
+            android:label="Read Barcode"
+            android:parentActivityName=".mains.MapsActivity">
+        </activity>
+
+        <activity
+            android:name=".mains.AccountsActivity"
+            android:parentActivityName=".mains.MapsActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <service android:name="com.parse.PushService" />
+
+        <receiver
+            android:name=".parse.ParseReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.parse.push.intent.RECEIVE" />
+                <action android:name="com.parse.push.intent.DELETE" />
+                <action android:name="com.parse.push.intent.OPEN" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="locateme.technology.xor.locateme" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+</manifest>

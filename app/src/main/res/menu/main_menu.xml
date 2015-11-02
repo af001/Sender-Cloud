@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/system_logout"
+        android:title="@string/action_logout"
+        android:orderInCategory="99"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/system_exit"
+        android:title="@string/action_exit"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/show_accounts"
+        android:title="@string/action_show_accounts"
+        android:orderInCategory="99"
+        android:icon="@mipmap/ic_account_box_white_24dp"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/show_barcode"
+        android:title="@string/action_show_barcode"
+        android:orderInCategory="98"
+        android:icon="@mipmap/ic_gradient_white_24dp"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/show_layers"
+        android:title="@string/action_show_layers"
+        android:orderInCategory="97"
+        android:icon="@mipmap/ic_layers_white_24dp"
+        app:showAsAction="always" >
+
+        <menu>
+            <item
+                android:id="@+id/view_satellite"
+                android:title="Satellite" />
+            <item
+                android:id="@+id/view_hybrid"
+                android:title="Hybrid" />
+            <item
+                android:id="@+id/view_terrain"
+                android:title="Terrain" />
+            <item
+                android:id="@+id/view_normal"
+                android:title="Normal" />
+        </menu>
+    </item>
+
+</menu>
