@@ -33,6 +33,7 @@ public class LocationProvider implements
     private LocationRequest mLocationRequest;
 
     public LocationProvider(Context context, LocationCallback callback) {
+
         mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)

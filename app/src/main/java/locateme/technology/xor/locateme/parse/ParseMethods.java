@@ -1,5 +1,7 @@
 package locateme.technology.xor.locateme.parse;
 
+import android.util.Log;
+
 import com.parse.FindCallback;
 import com.parse.ParseACL;
 import com.parse.ParseException;
@@ -8,6 +10,7 @@ import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.List;
 
@@ -116,6 +119,26 @@ public class ParseMethods {
                     }
                 } else {
                     Timber.e("RemoveAccount", "Error removing user account.");
+                }
+            }
+        });
+    }
+
+    public void SyncAccount() {
+        ParseQuery<ParseObject> sync = new ParseQuery<ParseObject>("AccessList");
+        sync.whereEqualTo("trackerId", ParseUser.getCurrentUser().getObjectId());
+        sync.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null) {
+                    ParseObject.pinAllInBackground((List<ParseObject>) objects, new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                Log.d("Sync: ", "Sync completed successfully!");
+                            }
+                        }
+                    });
                 }
             }
         });

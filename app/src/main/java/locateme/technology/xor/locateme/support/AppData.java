@@ -15,6 +15,10 @@ public abstract class AppData {
 
     public static final int PARSE_ACCOUNT_EXISTS = 202;
 
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 30;
+
+    public static final int MY_PERMISSIONS_REQUEST_READ_PHONE = 31;
+
     public final static int WHITE = 0xFFFFFFFF;
 
     public final static int BLACK = 0xFF000000;

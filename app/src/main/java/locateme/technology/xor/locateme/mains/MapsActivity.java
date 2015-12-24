@@ -1,12 +1,17 @@
 package locateme.technology.xor.locateme.mains;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -54,6 +59,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FloatingActionButton myFab;
     private ProgressBar progressBar;
     private boolean isVerified;
+    private double currentLatitude;
+    private double currentLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,9 +120,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 builder.include(latLng);
                                 counter++;
                             }
+
                             AddMarker(object.getString("trackedId"), latLng);
                         }
                         if (counter > 0) {
+                            if (currentLatitude != 0.0) {
+                                LatLng myLocation = new LatLng(currentLatitude, currentLongitude);
+                                builder.include(myLocation);
+                            }
                             LatLngBounds bounds = builder.build();
                             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300));
                         }
@@ -147,7 +159,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null) {
                     for (ParseObject obj : objects) {
-                        System.out.println("Nick: " + obj.getString("nickname") + " Location: " + point.latitude);
                         if (point.latitude == 0) {
                             Toast.makeText(MapsActivity.this, "Location services for " +
                                     obj.getString("nickname") + " are disabled!", Toast.LENGTH_SHORT).show();
@@ -167,10 +178,48 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    private void RequestPermissionReadPhone() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+
+                requestPermissions(new String[]{
+                                Manifest.permission.READ_PHONE_STATE},
+                        AppData.MY_PERMISSIONS_REQUEST_READ_PHONE);
+
+            } else {
+                Log.d("Home", "Already granted access to location.");
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case AppData.MY_PERMISSIONS_REQUEST_READ_PHONE:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Uri packageURI = Uri.parse("package:" + AppController.class.getPackage().getName());
+                    Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI);
+                    startActivity(uninstallIntent);
+                }
+                return;
+            default:
+                Timber.e("MapsActivity", "Permission error onRequestPermissionsResult");
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMyLocationEnabled(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                mMap.setMyLocationEnabled(true);
+            }
+        } else {
+            mMap.setMyLocationEnabled(true);
+        }
+
         UiSettings settings = mMap.getUiSettings();
         settings.setMyLocationButtonEnabled(true);
         settings.setCompassEnabled(false);
@@ -181,23 +230,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Find ZoomControl view
         View zoomControls = findViewById(AppData.ZOOM_CONTROL);
         View myLocationBtn = findViewById(AppData.MY_LOCATION);
-        View otherControls = findViewById(AppData.MAP_CONTROL);
+        // View otherControls = findViewById(AppData.MAP_CONTROL);
 
         if (zoomControls != null && zoomControls.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
             // ZoomControl is inside of RelativeLayout
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) zoomControls.getLayoutParams();
-            RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams)  myLocationBtn.getLayoutParams();
-            RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams)  otherControls.getLayoutParams();
+            RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) myLocationBtn.getLayoutParams();
+            // RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) otherControls.getLayoutParams();
 
             // Align it to - parent top|left
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_START);
 
-            params1.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            params1.addRule(RelativeLayout.ALIGN_PARENT_START);
+            params1.addRule(RelativeLayout.ALIGN_PARENT_END);
+            //params1.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
-            params2.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            params2.addRule(RelativeLayout.ALIGN_PARENT_END);
+            //params2.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            //params2.addRule(RelativeLayout.ALIGN_PARENT_START);
 
             // Update margins, set to 10dp
             final int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10,
@@ -208,9 +257,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     getResources().getDisplayMetrics());
             params1.setMargins(margin1, margin1, margin1, margin1);
 
+            /*
             final int margin2 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10,
                     getResources().getDisplayMetrics());
-            params2.setMargins(margin2, margin2, margin2, margin2);
+            params2.setMargins(margin2, margin2, margin2, margin2); */
         }
 
         // CENTER ON THE UNITED STATES
@@ -293,8 +343,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             case R.id.show_barcode:
                 if (isVerified) {
-                    QrcodeDialog mQrCode = new QrcodeDialog();
-                    mQrCode.AlertUser(this);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                            QrcodeDialog mQrCode = new QrcodeDialog();
+                            mQrCode.AlertUser(this);
+                        } else {
+                            RequestPermissionReadPhone();
+                        }
+                    }
                 } else {
                     Toast.makeText(MapsActivity.this, "Please verify your email address!", Toast.LENGTH_SHORT).show();
                 }
@@ -324,8 +380,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void handleNewLocation(Location location) {
-        double currentLatitude = location.getLatitude();
-        double currentLongitude = location.getLongitude();
+        currentLatitude = location.getLatitude();
+        currentLongitude = location.getLongitude();
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
