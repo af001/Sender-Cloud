@@ -134,8 +134,8 @@ public class ParseMethods {
                     ParseObject.pinAllInBackground((List<ParseObject>) objects, new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
-                            if (e == null) {
-                                Log.d("Sync: ", "Sync completed successfully!");
+                            if (e != null) {
+                                Timber.d("Sync: ", "Unable to sync!");
                             }
                         }
                     });

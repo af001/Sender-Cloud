@@ -230,23 +230,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Find ZoomControl view
         View zoomControls = findViewById(AppData.ZOOM_CONTROL);
         View myLocationBtn = findViewById(AppData.MY_LOCATION);
-        // View otherControls = findViewById(AppData.MAP_CONTROL);
+        View otherControls = findViewById(AppData.MAP_CONTROL);
 
         if (zoomControls != null && zoomControls.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
             // ZoomControl is inside of RelativeLayout
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) zoomControls.getLayoutParams();
             RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) myLocationBtn.getLayoutParams();
-            // RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) otherControls.getLayoutParams();
+            RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) otherControls.getLayoutParams();
 
             // Align it to - parent top|left
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             params.addRule(RelativeLayout.ALIGN_PARENT_START);
 
             params1.addRule(RelativeLayout.ALIGN_PARENT_END);
-            //params1.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            params1.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
-            //params2.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            //params2.addRule(RelativeLayout.ALIGN_PARENT_START);
+            params2.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            params2.addRule(RelativeLayout.ALIGN_PARENT_END);
 
             // Update margins, set to 10dp
             final int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10,
@@ -257,10 +257,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     getResources().getDisplayMetrics());
             params1.setMargins(margin1, margin1, margin1, margin1);
 
-            /*
-            final int margin2 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10,
+            final int margin2 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60,
                     getResources().getDisplayMetrics());
-            params2.setMargins(margin2, margin2, margin2, margin2); */
+            params2.setMargins(margin2, margin2, margin2, margin2);
         }
 
         // CENTER ON THE UNITED STATES
@@ -350,6 +349,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         } else {
                             RequestPermissionReadPhone();
                         }
+                    } else {
+                        QrcodeDialog mQrCode = new QrcodeDialog();
+                        mQrCode.AlertUser(this);
                     }
                 } else {
                     Toast.makeText(MapsActivity.this, "Please verify your email address!", Toast.LENGTH_SHORT).show();

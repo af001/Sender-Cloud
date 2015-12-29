@@ -28,10 +28,10 @@ public class GPSTracker extends Service implements LocationListener {
     double longitude;
 
     // THE MINIMUM DISTANCE TO CHANGE UPDATES - IN METERS
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 5; // 5 METERS
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0;
 
     // THE MINIMUM TIME BETWEEN UPDATES IN MILLISECONDS
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 MINUTE
+    private static final long MIN_TIME_BW_UPDATES = 10000;
 
     // DECLARING A LOCATION MANAGER
     protected LocationManager locationManager;
@@ -171,5 +171,4 @@ public class GPSTracker extends Service implements LocationListener {
     public IBinder onBind(Intent arg0) {
         return null;
     }
-
 }
