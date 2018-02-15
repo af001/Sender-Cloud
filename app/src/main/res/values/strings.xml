@@ -1,5 +1,5 @@
 <resources>
-    <string name="google_app_id">970204178053</string>
+    <string name="google_app_id">383838382772</string>
     <string name="app_name">Sender</string>
     <string name="action_settings">Settings</string>
     <string name="action_add_account">Add Account</string>
@@ -37,6 +37,6 @@
     <string name="error_loading_users">Loading users failed</string>
     <string name="no_users">No Users</string>
     <string name="avatar">Avatar</string>
-    <string name="tv_holder">Anton Foltz</string>
+    <string name="tv_holder">Anton</string>
 
 </resources>
