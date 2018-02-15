@@ -56,7 +56,7 @@
             android:value="@string/google_maps_key" />
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="713c97ad73c92e691d5188791591507b1fe02b49" />
+            android:value="<fabric_key>" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
